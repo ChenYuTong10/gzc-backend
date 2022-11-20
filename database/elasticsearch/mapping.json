@@ -1,0 +1,79 @@
+{
+  "qianziwen": {
+    "mappings": {
+      "properties": {
+        "author": {
+          "type": "keyword"
+        },
+        "source": {
+          "type": "keyword"
+        },
+        "grade": {
+          "type": "keyword"
+        },
+        "genre": {
+          "type": "keyword"
+        },
+        "order": {
+          "type": "integer"
+        },
+        "head": {
+          "analyzer": "ik_max_word",
+          "type": "text",
+          "fielddata": "true",
+          "term_vector": "with_positions_offsets"
+        },
+        "body": {
+          "analyzer": "ik_max_word",
+          "type": "text",
+          "fielddata": "true",
+          "term_vector": "with_positions_offsets"
+        },
+        "tags": {
+          "type": "text"
+        }
+      }
+    },
+    "settings": {
+      "number_of_shards": "1",
+      "number_of_replicas": "0"
+    }
+  },
+  "xuenianli": {
+    "mappings": {
+      "properties": {
+        "author": {
+          "type": "keyword"
+        },
+        "source": {
+          "type": "keyword"
+        },
+        "grade": {
+          "type": "keyword"
+        },
+        "genre": {
+          "type": "keyword"
+        },
+        "academy": {
+          "type": "keyword"
+        },
+        "head": {
+          "analyzer": "ik_max_word",
+          "type": "text",
+          "fielddata": "true",
+          "term_vector": "with_positions_offsets"
+        },
+        "body": {
+          "analyzer": "ik_max_word",
+          "type": "text",
+          "fielddata": "true",
+          "term_vector": "with_positions_offsets"
+        }
+      }
+    },
+    "settings": {
+      "number_of_shards": "1",
+      "number_of_replicas": "0"
+    }
+  }
+}

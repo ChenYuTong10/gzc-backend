@@ -1,0 +1,29 @@
+{
+  "name": "gzc-backend",
+  "version": "1.0.0",
+  "description": "a simple node express backend",
+  "main": "build/app.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node build/app.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q build/app.js\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.5.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "pg": "^8.8.0",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.11.9",
+    "@types/pg": "^8.6.5",
+    "concurrently": "^7.5.0",
+    "nodemon": "^2.0.20",
+    "typescript": "^4.8.4"
+  }
+}
