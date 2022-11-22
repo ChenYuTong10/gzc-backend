@@ -7,7 +7,7 @@ COPY . .
 # set registry in china
 RUN npm config set registry https://registry.npm.taobao.org
 
-RUN npm install && npm build
+RUN npm install && npm run build
 
 EXPOSE 9090
 
