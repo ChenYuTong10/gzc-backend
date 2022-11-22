@@ -16,6 +16,6 @@ ENTRYPOINT ["npm", "run", "start"]
 # docker build . -t gzc-backend
 # docker run \
 # --name corpusbackend \
-# --netword cms \
-# -v $HOME/gzc-backend/logs:/app/logs
+# --network cms \
+# -v $HOME/gzc-backend/logs:/app/logs \
 # -p 9090:9090 -d chenyutong996/gzc-backend
