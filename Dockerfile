@@ -1,10 +1,11 @@
-FROM node:16
+FROM node:16-alpine
 
 WORKDIR /app
 
 COPY . .
 
-RUN npm install
+# set registry in china
+RUN npm config set registry https://registry.npm.taobao.org && npm install
 
 EXPOSE 9090
 
