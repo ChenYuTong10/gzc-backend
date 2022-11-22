@@ -13,5 +13,9 @@ EXPOSE 9090
 
 ENTRYPOINT ["npm", "run", "start"]
 
-# sudo docker build . -t gzc-backend
-# sudo docker run -d -v /home/ecs-user/gzc-backend/logs:/app/logs -p 9090:9090 chenyutong996/gzc-backend
+# docker build . -t gzc-backend
+# docker run \
+# --name corpusbackend \
+# --netword cms \
+# -v $HOME/gzc-backend/logs:/app/logs
+# -p 9090:9090 -d chenyutong996/gzc-backend
