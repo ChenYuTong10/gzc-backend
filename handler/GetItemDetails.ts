@@ -1,17 +1,6 @@
 import {es, pg, logger} from "../app";
 import {Request, Response} from "express";
-
-interface DocumentDetails {
-    head: string;
-    tags: string[];
-    body: string;
-    analyzed: string;
-}
-
-interface FreqTable {
-    word: string;
-    freq: number;
-}
+import {DocumentDetails, FreqTable} from "./Interfaces";
 
 export async function GetItemDetails(req: Request, res: Response) {
     res.setHeader("Access-Control-Allow-Origin", "*");

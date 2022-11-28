@@ -1,10 +1,10 @@
+import {Request, Response} from "express";
 import {es, logger} from "../app";
-import {Request, Response} from 'express';
 import {SearchItem} from "./Interfaces";
 
-export async function SearchKeyword(req: Request, res: Response) {
+export async function DownloadDocs(req: Request, res: Response) {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Allow-Headers", "*");
     res.setHeader("Access-Control-Allow-Method", "GET, POST");
     try {
         const searchOption = req.body;
@@ -35,17 +35,16 @@ export async function SearchKeyword(req: Request, res: Response) {
         }
 
         const query = {
-            from: (searchOption.page - 1) * searchOption.size,
-            size: searchOption.size,
+            size: 100,
             query: {
                 bool: {
                     must: must
                 }
             },
-            _source: ["author", "_id"],
+            _source: ["_id"],
             highlight: {
                 fields: {
-                    body: {
+                    [searchOption.show]: {
                         fragmenter: "simple",
                         number_of_fragments: 1,
                         pre_tags: "",
@@ -54,42 +53,39 @@ export async function SearchKeyword(req: Request, res: Response) {
                 }
             }
         };
-        const {hits, total} = await es.MatchKeyword<SearchItem>(searchOption.target, query);
+        const scroll = await es.Scroll<SearchItem>(searchOption.target, query);
 
         const regex = new RegExp(`.\{${searchOption.limit}\}${searchOption.keyword}.\{${searchOption.limit}\}`, "g");
-        const docs: SearchItem[] = [];
-        hits.forEach(hit => {
-            if (!hit) {
-                return;
-            }
-            const id: string = hit._id;
+        let total: number = 1;
+        const texts: string[] = [];
+        scroll.forEach(page => {
+            const hits = page.hits.hits;
 
-            if (!hit._source) {
-                return;
-            }
-            const author = hit._source["author"];
+            hits.forEach(hit => {
+                if (!hit) {
+                    return;
+                }
 
-            const highlight = hit.highlight;
-            if (!highlight) {
-                return;
-            }
-            const fragments = highlight[searchOption.show];
-            if (fragments.length <= 0) {
-                return;
-            }
-            const result = regex.exec(fragments[0]);
-            if (!result) {
-                return;
-            }
-            const document: string = result[0];
-
-            docs.push({id, author, document});
+                const highlight = hit.highlight;
+                if (!highlight) {
+                    return;
+                }
+                const fragments = highlight[searchOption.show];
+                if (fragments.length <= 0) {
+                    return;
+                }
+                const result = regex.exec(fragments[0]);
+                if (!result) {
+                    return;
+                }
+                texts.push(`${total++}\t${result[0]}\n`);
+            });
         });
 
-        res.send({total, docs});
-    } catch (err: any) {
-        logger.log({level: "error", message: "unexpected error when searching keyword", err: err.message});
+        res.send(texts.join(""));
+    }
+    catch (err: any) {
+        logger.log({level: "error", message: "unexpected error when getting document", err: err.message});
         res.status(500).send(err.message);
     }
-
 }

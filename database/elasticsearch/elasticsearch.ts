@@ -1,5 +1,5 @@
 import {Client} from "@elastic/elasticsearch";
-import {SearchHit, SearchTotalHits} from "@elastic/elasticsearch/lib/api/types";
+import {SearchResponse} from "@elastic/elasticsearch/lib/api/types";
 
 class Elasticsearch {
 
@@ -55,6 +55,39 @@ class Elasticsearch {
         const res = await this.client.search<T>({index, body: query});
         const {hits} = res.hits;
         return hits.length > 0 ? hits[0] : null;
+    }
+
+    // Scroll retrieve large numbers of results from a single search query.
+    // It returns a list containing the whole SearchResponse.
+    async Scroll<T>(
+        index: string,
+        query: any
+    ): Promise<SearchResponse<T>[]> {
+        let total: number = 0;
+        const results: SearchResponse<T>[] = [];
+
+        const res = await this.client.search<T>({
+            index: index,
+            scroll: "30s",
+            body: query
+        });
+        results.push(res);
+
+        while (results.length > 0) {
+            const res = results[results.length - 1];
+            total += res.hits.hits.length;
+            // @ts-ignore
+            if (res.hits.total.value === total) {
+                break;
+            }
+            results.push(
+                await this.client.scroll({
+                    scroll_id: res._scroll_id,
+                    scroll: "30s"
+                })
+            );
+        }
+        return results;
     }
 
     // GetClient returns the elasticsearch client and please notice the client may be empty.

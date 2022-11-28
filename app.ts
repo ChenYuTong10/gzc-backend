@@ -82,8 +82,10 @@ pg.Ping()
 // -------------------- ROUTER --------------------
 import { SearchKeyword } from "./handler/MatchKeyword";
 import { GetItemDetails } from "./handler/GetItemDetails";
+import {DownloadDocs} from "./handler/DownloadDocs";
 
 app.use(express.json());
 
 app.post("/api/search", SearchKeyword);
 app.get("/api/details", GetItemDetails);
+app.post("/api/download", DownloadDocs);

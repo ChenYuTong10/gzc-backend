@@ -14,7 +14,7 @@ GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO corpus_manager;
 
 ALTER DEFAULT PRIVILEGES FOR ROLE corpus_manager IN SCHEMA public GRANT ALL ON TABLES TO corpus_manager;
 
--- GRANT corpus_manager TO corpus_manager;
+GRANT corpus_manager TO corpus_manager;
 
 create table corpus.public.tag_info
 (
