@@ -55,7 +55,7 @@ export async function DownloadDocs(req: Request, res: Response) {
         };
         const scroll = await es.Scroll<SearchItem>(searchOption.target, query);
 
-        const regex = new RegExp(`.\{${searchOption.limit}\}${searchOption.keyword}.\{${searchOption.limit}\}`, "g");
+        const regex = new RegExp(`.\{${searchOption.limit}\}${searchOption.keyword}.\{${searchOption.limit}\}`, "im");
         let total: number = 1;
         const texts: string[] = [];
         scroll.forEach(page => {
